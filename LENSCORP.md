@@ -5,7 +5,7 @@
 Este repositório é um fork de `twentyhq/twenty`, usado como CRM interno da LensCorp.
 Hospedagem: Railway, projeto `CRM-Lenscorp` (serviços `twenty-server`, `twenty-worker`, Postgres, Redis, bucket `twenty-files`).
 Versão em produção: `v2.45.8` (imagem oficial `twentycrm/twenty`).
-Base do código neste fork: tag `twenty/v2.45.6` (a 2.45.8 só existe como imagem Docker, sem tag no git).
+Base do código neste fork: tag `twenty/v2.46.0` (branch `update/v2.46.0`, ainda não publicada).
 As tags de release do upstream seguem o padrão `twenty/vX.Y.Z`.
 URL: https://twenty-server-production-66417.up.railway.app
 
