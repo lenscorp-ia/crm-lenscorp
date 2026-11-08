@@ -4,8 +4,8 @@
 
 Este repositório é um fork de `twentyhq/twenty`, usado como CRM interno da LensCorp.
 Hospedagem: Railway, projeto `CRM-Lenscorp` (serviços `twenty-server`, `twenty-worker`, Postgres, Redis, bucket `twenty-files`).
-Versão em produção: `v2.45.8` (imagem oficial `twentycrm/twenty`).
-Base do código neste fork: tag `twenty/v2.46.0` (branch `update/v2.46.0`, ainda não publicada).
+Versão em produção: `v2.46.0` com customizações (imagem `ghcr.io/lenscorp-ia/crm-lenscorp:v2.46.0`).
+Base do código neste fork: tag `twenty/v2.46.0`. O upstream já está na `v2.56.1`; atualizar em etapas.
 As tags de release do upstream seguem o padrão `twenty/vX.Y.Z`.
 URL: https://twenty-server-production-66417.up.railway.app
 
@@ -51,5 +51,5 @@ Quando precisar alterar o core:
   - `twenty-server`: `engine/core-modules/twenty-config/config-variables.ts` (variáveis `WHATSAPP_SERVICE_URL` e `WHATSAPP_SERVICE_KEY`), `modules/workflow/workflow-executor/factories/workflow-action.factory.ts`, `workflow-executor.module.ts`, `workflow-actions/types/workflow-action.type.ts`, `workflow-actions/types/workflow-action-settings.type.ts`, `modules/workflow/workflow-builder/workflow-version-step/workflow-version-step-operations.workspace-service.ts` e a pasta nova `workflow-actions/send-whatsapp/`.
   - `twenty-front`: `modules/workflow/types/Workflow.ts`, `workflow-variables/utils/generate/computeStepOutputSchema.ts`, `workflow-steps/components/WorkflowStepDetail.tsx`, `WorkflowRunStepNodeDetail.tsx`, `workflow-actions/constants/CoreActions.ts`, `utils/getActionIcon.ts`, `getActionIconColorOrThrow.ts`, `getActionIconStrokeOrThrow.ts`, `generated/graphql.ts` (valor do enum, ajuste manual), e os novos `constants/actions/SendWhatsappAction.ts` e `send-whatsapp-action/`.
   - Variáveis no Railway (`twenty-server` e `twenty-worker`): `WHATSAPP_SERVICE_URL` (ex.: `https://meta-leads-production-f9af.up.railway.app`) e `WHATSAPP_SERVICE_KEY` (o mesmo valor de `WHATSAPP_ONBOARDING_KEY` do `lenscorp-meta-leads`).
-  - **Só funciona com imagem própria.** Produção roda a imagem oficial `twentycrm/twenty`, que não tem essa ação; ela só aparece no menu depois que `twenty-server` e `twenty-worker` passarem a rodar uma imagem construída a partir deste fork.
+  - Só funciona com a imagem própria (ver item abaixo); a imagem oficial `twentycrm/twenty` não tem essa ação.
 - **Imagem própria** (`.github/workflows/lenscorp-docker-image.yaml`). Motivo: gerar a imagem com as customizações acima. Roda ao enviar uma tag `lenscorp/vX.Y.Z` e publica `ghcr.io/lenscorp-ia/crm-lenscorp:vX.Y.Z` (alvo `twenty` do Dockerfile oficial). `twenty-server` e `twenty-worker` no Railway usam essa imagem no lugar de `twentycrm/twenty`. Ao atualizar o upstream, criar a tag nova no commit do merge.
