@@ -151,15 +151,18 @@ export class DatabaseToolProvider implements ToolProvider {
         continue;
       }
 
-      const canReadRecords = requireExplicitObjectGrants
-        ? explicitPermission?.canReadObjectRecords === true
-        : permission.canReadObjectRecords;
-      const canUpdateRecords = requireExplicitObjectGrants
-        ? explicitPermission?.canUpdateObjectRecords === true
-        : permission.canUpdateObjectRecords;
-      const canSoftDeleteRecords = requireExplicitObjectGrants
-        ? explicitPermission?.canSoftDeleteObjectRecords === true
-        : permission.canSoftDeleteObjectRecords;
+      const canReadRecords =
+        permission.canReadObjectRecords &&
+        (!requireExplicitObjectGrants ||
+          explicitPermission?.canReadObjectRecords === true);
+      const canUpdateRecords =
+        permission.canUpdateObjectRecords &&
+        (!requireExplicitObjectGrants ||
+          explicitPermission?.canUpdateObjectRecords === true);
+      const canSoftDeleteRecords =
+        permission.canSoftDeleteObjectRecords &&
+        (!requireExplicitObjectGrants ||
+          explicitPermission?.canSoftDeleteObjectRecords === true);
 
       const snakePlural = camelToSnakeCase(flatObject.namePlural);
       const snakeSingular = camelToSnakeCase(flatObject.nameSingular);
@@ -288,6 +291,7 @@ export class DatabaseToolProvider implements ToolProvider {
           objectName: objectMetadata.nameSingular,
           icon: flatObject.icon ?? undefined,
           operation: 'create_one',
+          approval: { template: 'recordCreate' },
         });
 
         descriptors.push({
@@ -340,6 +344,7 @@ export class DatabaseToolProvider implements ToolProvider {
           objectName: objectMetadata.nameSingular,
           icon: flatObject.icon ?? undefined,
           operation: 'update_one',
+          approval: { template: 'recordUpdate' },
         });
 
         descriptors.push({
@@ -417,6 +422,7 @@ export class DatabaseToolProvider implements ToolProvider {
           objectName: objectMetadata.nameSingular,
           icon: flatObject.icon ?? undefined,
           operation: 'delete_one',
+          approval: { template: 'recordDelete' },
         });
 
         descriptors.push({

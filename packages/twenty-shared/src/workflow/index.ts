@@ -101,8 +101,14 @@ export { workflowUpdateRecordActionSchema } from './schemas/update-record-action
 export { workflowUpdateRecordActionSettingsSchema } from './schemas/update-record-action-settings-schema';
 export { workflowUpsertRecordActionSchema } from './schemas/upsert-record-action-schema';
 export { workflowUpsertRecordActionSettingsSchema } from './schemas/upsert-record-action-settings-schema';
+export { workflowWaitForEventActionSchema } from './schemas/wait-for-event-action-schema';
+export { workflowWaitForEventActionSettingsSchema } from './schemas/wait-for-event-action-settings-schema';
 export { workflowWebhookTriggerSchema } from './schemas/webhook-trigger-schema';
 export { workflowActionSchema } from './schemas/workflow-action-schema';
+export {
+  workflowConversationScopeSchema,
+  workflowConversationSchema,
+} from './schemas/workflow-conversation-schema';
 export { workflowDelayActionSchema } from './schemas/workflow-delay-action-schema';
 export { workflowDelayActionSettingsSchema } from './schemas/workflow-delay-action-settings-schema';
 export { workflowFileSchema } from './schemas/workflow-file-action-schema';
@@ -116,6 +122,7 @@ export {
   workflowRunStepLogsSchema,
 } from './schemas/workflow-run-step-log-schema';
 export { workflowRunStepStatusSchema } from './schemas/workflow-run-step-status-schema';
+export { workflowStepWaitSchema } from './schemas/workflow-step-wait-schema';
 export { workflowTriggerSchema } from './schemas/workflow-trigger-schema';
 export { workflowVariableReferenceSchema } from './schemas/workflow-variable-reference-schema';
 export type { EmailRecipients } from './types/EmailRecipients';
@@ -133,6 +140,10 @@ export type {
   WorkflowClassifyCriterion,
   WorkflowClassifyQuestion,
 } from './types/WorkflowClassifyQuestion';
+export type {
+  WorkflowConversation,
+  WorkflowConversationScope,
+} from './types/WorkflowConversation';
 export type { BodyType } from './types/WorkflowHttpRequestStep';
 export type {
   WorkflowRunStepInfo,
@@ -143,8 +154,8 @@ export type {
   WorkflowRunStepLog,
   WorkflowRunStepLogs,
   AiAgentStepLogDetails,
-  AiToolCallLog,
 } from './types/WorkflowRunStepLog';
+export type { WorkflowStepWait } from './types/WorkflowStepWait';
 export { canObjectBeManagedByAutomation } from './utils/canObjectBeManagedByAutomation';
 export { extractRawVariableNamePart } from './utils/extractRawVariableNameParts';
 export { getFunctionInputFromInputSchema } from './utils/getFunctionInputFromInputSchema';
