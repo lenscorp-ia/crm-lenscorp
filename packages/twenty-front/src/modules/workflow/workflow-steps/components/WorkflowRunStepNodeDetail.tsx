@@ -9,6 +9,7 @@ import { WorkflowEditActionClassify } from '@/workflow/workflow-steps/workflow-a
 import { WorkflowActionCode } from '@/workflow/workflow-steps/workflow-actions/code-action/components/WorkflowActionCode';
 import { WorkflowEditActionCreateCalendarEvent } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionCreateCalendarEvent';
 import { WorkflowEditActionSendChatMessage } from '@/workflow/workflow-steps/workflow-actions/send-chat-message-action/components/WorkflowEditActionSendChatMessage';
+import { WorkflowEditActionSendWhatsapp } from '@/workflow/workflow-steps/workflow-actions/send-whatsapp-action/components/WorkflowEditActionSendWhatsapp';
 import { WorkflowEditActionCreateRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionCreateRecord';
 import { WorkflowEditActionDeleteRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionDeleteRecord';
 import { WorkflowEditActionEmpty } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmpty';
@@ -146,6 +147,17 @@ export const WorkflowRunStepNodeDetail = ({
         case 'SEND_CHAT_MESSAGE': {
           return (
             <WorkflowEditActionSendChatMessage
+              key={stepId}
+              action={stepDefinition.definition}
+              actionOptions={{
+                readonly: true,
+              }}
+            />
+          );
+        }
+        case 'SEND_WHATSAPP': {
+          return (
+            <WorkflowEditActionSendWhatsapp
               key={stepId}
               action={stepDefinition.definition}
               actionOptions={{

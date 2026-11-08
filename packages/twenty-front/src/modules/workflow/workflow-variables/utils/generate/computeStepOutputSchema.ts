@@ -229,6 +229,23 @@ export const computeStepOutputSchema = ({
       };
     }
 
+    case 'SEND_WHATSAPP': {
+      return {
+        messageId: {
+          isLeaf: true,
+          type: FieldMetadataType.TEXT,
+          label: 'Message record ID',
+          value: '',
+        },
+        text: {
+          isLeaf: true,
+          type: FieldMetadataType.TEXT,
+          label: 'Message text',
+          value: '',
+        },
+      };
+    }
+
     case 'SEND_EMAIL': {
       return {
         success: {

@@ -355,6 +355,24 @@ export class WorkflowVersionStepOperationsWorkspaceService {
           },
         };
       }
+      case WorkflowActionType.SEND_WHATSAPP: {
+        return {
+          builtStep: {
+            ...baseStep,
+            name: 'Send WhatsApp',
+            type: WorkflowActionType.SEND_WHATSAPP,
+            settings: {
+              ...BASE_STEP_DEFINITION,
+              input: {
+                phone: '',
+                templateName: '',
+                language: 'pt_BR',
+                variables: [],
+              },
+            },
+          },
+        };
+      }
       case WorkflowActionType.CREATE_CALENDAR_EVENT: {
         return {
           builtStep: {

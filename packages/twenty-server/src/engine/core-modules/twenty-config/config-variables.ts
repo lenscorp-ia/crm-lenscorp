@@ -2570,6 +2570,26 @@ export class ConfigVariables {
   })
   @IsOptional()
   APP_REGISTRY_TOKEN: string;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.ADVANCED_SETTINGS,
+    description:
+      'Base URL of the LensCorp WhatsApp service used by the Send WhatsApp workflow action',
+    type: ConfigVariableType.STRING,
+  })
+  @IsString()
+  @IsOptional()
+  WHATSAPP_SERVICE_URL: string;
+
+  @ConfigVariablesMetadata({
+    group: ConfigVariablesGroup.ADVANCED_SETTINGS,
+    isSensitive: true,
+    description:
+      'Inbox key (x-inbox-key header) of the LensCorp WhatsApp service',
+    type: ConfigVariableType.STRING,
+  })
+  @IsOptional()
+  WHATSAPP_SERVICE_KEY: string;
 }
 
 export const validate = (config: Record<string, unknown>): ConfigVariables => {

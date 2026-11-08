@@ -11,6 +11,7 @@ import { type WorkflowIteratorActionSettings } from 'src/modules/workflow/workfl
 import { type WorkflowLogicFunctionActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/logic-function/types/workflow-logic-function-action-settings.type';
 import { type WorkflowSendEmailActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/mail-sender/types/workflow-send-email-action-settings.type';
 import { type WorkflowSendChatMessageActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/send-chat-message/types/workflow-send-chat-message-action-settings.type';
+import { type WorkflowSendWhatsappActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/send-whatsapp/types/workflow-send-whatsapp-action-settings.type';
 import {
   type WorkflowCreateRecordActionSettings,
   type WorkflowDeleteRecordActionSettings,
@@ -40,6 +41,7 @@ export type WorkflowActionSettings =
   | WorkflowLogicFunctionActionSettings
   | WorkflowSendEmailActionSettings
   | WorkflowSendChatMessageActionSettings
+  | WorkflowSendWhatsappActionSettings
   | WorkflowCreateCalendarEventActionSettings
   | WorkflowCodeActionSettings
   | WorkflowCreateRecordActionSettings

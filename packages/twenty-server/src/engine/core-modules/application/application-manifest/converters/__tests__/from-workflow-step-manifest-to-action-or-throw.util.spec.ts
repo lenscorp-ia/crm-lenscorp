@@ -179,7 +179,8 @@ describe('application workflow actions', () => {
         type !== WorkflowActionType.SEND_EMAIL &&
         type !== WorkflowActionType.DRAFT_EMAIL &&
         type !== WorkflowActionType.CREATE_CALENDAR_EVENT &&
-        type !== WorkflowActionType.SEND_CHAT_MESSAGE,
+        type !== WorkflowActionType.SEND_CHAT_MESSAGE &&
+        type !== WorkflowActionType.SEND_WHATSAPP,
     ),
   )('converts %s to its runtime action', (type) => {
     expect(convert(type)).toMatchObject({ id: STEP_ID, type, valid: true });
