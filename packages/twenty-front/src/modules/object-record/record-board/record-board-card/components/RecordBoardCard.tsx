@@ -13,16 +13,19 @@ import { RecordBoardCardHeader } from '@/object-record/record-board/record-board
 import { RECORD_BOARD_CARD_CLICK_OUTSIDE_ID } from '@/object-record/record-board/record-board-card/constants/RecordBoardCardClickOutsideId';
 import { RecordBoardCardComponentInstanceContext } from '@/object-record/record-board/record-board-card/states/contexts/RecordBoardCardComponentInstanceContext';
 import { recordBoardCardIsExpandedComponentState } from '@/object-record/record-board/record-board-card/states/recordBoardCardIsExpandedComponentState';
+import { isWhatsappUnreadRecord } from '@/object-record/record-board/record-board-card/utils/isWhatsappUnreadRecord';
 import { RecordBoardComponentInstanceContext } from '@/object-record/record-board/states/contexts/RecordBoardComponentInstanceContext';
 import { RecordCard } from '@/object-record/record-card/components/RecordCard';
 import { RecordDragMultiDragStack } from '@/object-record/record-drag/components/RecordDragMultiDragStack';
 import { draggedRecordIdsComponentState } from '@/object-record/record-drag/states/draggedRecordIdsComponentState';
+import { recordStoreFamilyState } from '@/object-record/record-store/states/recordStoreFamilyState';
 import { isRecordIdSecondaryDragMultipleComponentFamilyState } from '@/object-record/record-drag/states/isRecordIdSecondaryDragMultipleComponentFamilyState';
 import { useOpenRecordFromIndexView } from '@/object-record/record-index/hooks/useOpenRecordFromIndexView';
 import { useAvailableComponentInstanceIdOrThrow } from '@/ui/utilities/state/component-state/hooks/useAvailableComponentInstanceIdOrThrow';
 import { useAtomComponentFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentFamilyStateValue';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
+import { useAtomFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilyStateValue';
 import { useGetCurrentViewOnly } from '@/views/hooks/useGetCurrentViewOnly';
 import { styled } from '@linaria/react';
 import { useContext } from 'react';
@@ -93,6 +96,8 @@ export const RecordBoardCard = () => {
     },
   );
 
+  const recordStore = useAtomFamilyStateValue(recordStoreFamilyState, recordId);
+
   const { openRecordContextMenu } = useOpenRecordContextMenu();
 
   const { openRecordFromIndexView } = useOpenRecordFromIndexView();
@@ -127,6 +132,7 @@ export const RecordBoardCard = () => {
             data-selected={isRecordSelected}
             data-focused={isRecordBoardCardFocused}
             data-active={isRecordBoardCardActive}
+            data-whatsapp-unread={isWhatsappUnreadRecord(recordStore)}
             onMouseLeave={onMouseLeaveBoard}
             onClick={handleCardClick}
             isDragging={!isDragOverlay && isRecordIdSecondaryDragMultiple}

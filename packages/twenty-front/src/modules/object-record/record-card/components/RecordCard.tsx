@@ -16,6 +16,12 @@ const StyledBoardCard = styled.div<{
 
   width: 100%;
 
+  &[data-whatsapp-unread='true'] {
+    --record-card-background-color: ${themeCssVariables.color.red3};
+
+    box-shadow: inset 3px 0 0 ${themeCssVariables.color.red9};
+  }
+
   &[data-selected='true'] {
     --record-card-background-color: ${themeCssVariables.accent.quaternary};
   }
