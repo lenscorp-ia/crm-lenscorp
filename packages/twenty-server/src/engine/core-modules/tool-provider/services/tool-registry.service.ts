@@ -12,6 +12,7 @@ import { type GenerateDescriptorOptions } from 'src/engine/core-modules/tool-pro
 import { type ToolProvider } from 'src/engine/core-modules/tool-provider/interfaces/tool-provider.interface';
 import { type ToolRetrievalOptions } from 'src/engine/core-modules/tool-provider/interfaces/tool-retrieval-options.type';
 
+import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { TOOL_PROVIDERS } from 'src/engine/core-modules/tool-provider/constants/tool-providers.token';
 import { compactToolOutput } from 'src/engine/core-modules/tool-provider/output-transforms/compact-tool-output.util';
 import { normalizeToolOutputToJsonValues } from 'src/engine/core-modules/tool-provider/output-transforms/normalize-tool-output-to-json-values.util';
@@ -20,8 +21,8 @@ import { type LearnToolsAspect } from 'src/engine/core-modules/tool-provider/too
 import { type ToolContext } from 'src/engine/core-modules/tool-provider/types/tool-context.type';
 import { type ToolDescriptor } from 'src/engine/core-modules/tool-provider/types/tool-descriptor.type';
 import { type ToolIndexEntry } from 'src/engine/core-modules/tool-provider/types/tool-index-entry.type';
+import { buildToolExecutionFailure } from 'src/engine/core-modules/tool-provider/utils/build-tool-execution-failure.util';
 import { findSimilarToolNames } from 'src/engine/core-modules/tool-provider/utils/find-similar-tool-names.util';
-import { wrapWithErrorHandler } from 'src/engine/core-modules/tool-provider/utils/tool-error.util';
 import { ToolOutputSpillService } from 'src/engine/core-modules/tool/services/tool-output-spill.service';
 import { type ToolOutput } from 'src/engine/core-modules/tool/types/tool-output.type';
 import { type RolePermissionConfig } from 'src/engine/twenty-orm/types/role-permission-config.type';
@@ -35,6 +36,7 @@ export class ToolRegistryService {
     private readonly providers: ToolProvider[],
     private readonly toolExecutorService: ToolExecutorService,
     private readonly toolOutputSpillService: ToolOutputSpillService,
+    private readonly exceptionHandlerService: ExceptionHandlerService,
   ) {}
 
   async getCatalog(
@@ -130,7 +132,6 @@ export class ToolRegistryService {
     descriptors: ToolDescriptor[],
     context: ToolProviderContext,
     options?: {
-      wrapWithErrorContext?: boolean;
       compactOutput?: boolean;
       spillLargeOutput?: boolean;
     },
@@ -169,9 +170,7 @@ export class ToolRegistryService {
       toolSet[descriptor.name] = {
         description: descriptor.description,
         inputSchema: jsonSchema(schema),
-        execute: options?.wrapWithErrorContext
-          ? wrapWithErrorHandler(descriptor.name, executeFn)
-          : executeFn,
+        execute: executeFn,
       };
     }
 
@@ -286,6 +285,17 @@ export class ToolRegistryService {
     });
   }
 
+  async findCatalogEntry(
+    toolName: string,
+    context: ToolContext,
+  ): Promise<ToolIndexEntry | undefined> {
+    const catalog = await this.getCatalog(
+      this.buildContextFromToolContext(context),
+    );
+
+    return catalog.find((entry) => entry.name === toolName);
+  }
+
   async suggestSimilarToolNames(
     toolNames: string[],
     context: ToolContext,
@@ -360,16 +370,22 @@ export class ToolRegistryService {
 
       return normalizeToolOutputToJsonValues(inlined);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const { output, shouldCapture } = buildToolExecutionFailure({
+        error,
+        toolName,
+      });
 
-      this.logger.error(`Error executing tool "${toolName}": ${errorMessage}`);
+      if (shouldCapture) {
+        this.exceptionHandlerService.captureExceptions([error], {
+          workspace: { id: context.workspaceId },
+        });
+      }
 
-      return {
-        success: false,
-        message: `Failed to execute ${toolName}`,
-        error: errorMessage,
-      };
+      this.logger.error(
+        `Error executing tool "${toolName}" in workspace ${context.workspaceId}: ${output.error}`,
+      );
+
+      return output;
     }
   }
 
@@ -385,18 +401,36 @@ export class ToolRegistryService {
     );
   }
 
-  // MCP and the workflow agent need full schemas.
   async getToolsByCategories(
     context: ToolProviderContext,
     options: ToolRetrievalOptions = {},
   ): Promise<ToolSet> {
-    const {
+    const { categories, excludeTools, compactOutput, spillLargeOutput } =
+      options;
+
+    const descriptors = await this.getDescriptorsByCategories(context, {
       categories,
       excludeTools,
-      wrapWithErrorContext,
+    });
+
+    const toolSet = this.hydrateToolSet(descriptors, context, {
       compactOutput,
       spillLargeOutput,
-    } = options;
+    });
+
+    this.logger.log(
+      `Generated ${Object.keys(toolSet).length} tools for categories: [${categories?.join(', ') ?? 'all'}]`,
+    );
+
+    return toolSet;
+  }
+
+  // MCP and the workflow agent need full schemas.
+  async getDescriptorsByCategories(
+    context: ToolProviderContext,
+    options: Pick<ToolRetrievalOptions, 'categories' | 'excludeTools'> = {},
+  ): Promise<ToolDescriptor[]> {
+    const { categories, excludeTools } = options;
     const categorySet = categories ? new Set(categories) : undefined;
 
     const results = await Promise.all(
@@ -427,17 +461,7 @@ export class ToolRegistryService {
       );
     }
 
-    const toolSet = this.hydrateToolSet(filteredDescriptors, context, {
-      wrapWithErrorContext,
-      compactOutput,
-      spillLargeOutput,
-    });
-
-    this.logger.log(
-      `Generated ${Object.keys(toolSet).length} tools for categories: [${categories?.join(', ') ?? 'all'}]`,
-    );
-
-    return toolSet;
+    return filteredDescriptors;
   }
 
   private generateProviderDescriptors(

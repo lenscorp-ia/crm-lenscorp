@@ -10,6 +10,7 @@ export const getActionIconStrokeOrThrow = (
     case 'HTTP_REQUEST':
     case 'SEND_EMAIL':
     case 'DRAFT_EMAIL':
+    case 'SEND_WHATSAPP':
     case 'CREATE_CALENDAR_EVENT':
     case 'CREATE_RECORD':
     case 'UPDATE_RECORD':
@@ -25,6 +26,7 @@ export const getActionIconStrokeOrThrow = (
     case 'EMPTY':
     case 'FILTER':
     case 'DELAY':
+    case 'WAIT_FOR_EVENT':
     case 'AI_AGENT':
     case 'CLASSIFY':
       return undefined;

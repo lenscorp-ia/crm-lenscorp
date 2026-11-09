@@ -11,6 +11,7 @@ export const getActionIconColorOrThrow = (
     case 'HTTP_REQUEST':
     case 'SEND_EMAIL':
     case 'DRAFT_EMAIL':
+    case 'SEND_WHATSAPP':
     case 'CREATE_CALENDAR_EVENT':
       return themeCssVariables.color.red9;
     case 'CREATE_RECORD':
@@ -28,6 +29,7 @@ export const getActionIconColorOrThrow = (
     case 'FILTER':
     case 'IF_ELSE':
     case 'DELAY':
+    case 'WAIT_FOR_EVENT':
       return themeCssVariables.color.green9;
     case 'AI_AGENT':
     case 'CLASSIFY':

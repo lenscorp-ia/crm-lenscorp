@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { defineFrontComponent } from 'twenty-sdk/define';
-import { ImageInput } from 'twenty-ui/components';
+import { ImageInput } from 'twenty-ui/components/input';
 import { Button } from 'twenty-ui/primitives/input';
 
 import { TwentyUiGalleryCard } from '@/__stories__/shared/front-components/twenty-ui-gallery-card';
@@ -22,8 +22,8 @@ const ImageInputExample = () => {
   return (
     <TwentyUiGalleryCard title="ImageInput">
       <ImageInput
-        role="group"
-        aria-label="Profile image"
+        accept="image/png, image/jpeg"
+        render={<div role="group" aria-label="Profile image" />}
         src={src}
         isUploading={isUploading}
         disabled={disabled}
@@ -32,7 +32,7 @@ const ImageInputExample = () => {
         uploadLabel="Choose profile image"
         removeLabel="Remove profile image"
         abortLabel="Cancel profile upload"
-        onUpload={(file) => {
+        onFileSelect={(file) => {
           setUploads((count) => count + 1);
           setSelectedFile(`${file.name}; ${file.type}; ${file.size} bytes`);
         }}

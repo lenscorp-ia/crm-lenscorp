@@ -1,4 +1,7 @@
-import { type ObjectsPermissions } from 'twenty-shared/types';
+import {
+  type FeatureFlagKey,
+  type ObjectsPermissions,
+} from 'twenty-shared/types';
 import { isDefined, pascalCase } from 'twenty-shared/utils';
 import { type ObjectLiteral } from 'typeorm';
 import { InstanceChecker } from 'typeorm/util/InstanceChecker';
@@ -67,7 +70,7 @@ export type QueryBuilderContext = {
   tableShape: WorkspaceTableShape;
   executor: QueryExecutor;
   objectRecordsPermissions: ObjectsPermissions;
-  isRecordSharingEnabled?: boolean;
+  featureFlagsMap?: Partial<Record<FeatureFlagKey, boolean>>;
   tableShapeByObjectMetadataId: (
     objectMetadataId: string,
   ) => WorkspaceTableShape;
@@ -79,7 +82,7 @@ export class WorkspaceSelectQueryBuilder implements WhereExpressionLike {
   readonly alias: string;
   readonly tableShape: WorkspaceTableShape;
   readonly objectRecordsPermissions: ObjectsPermissions;
-  readonly isRecordSharingEnabled: boolean;
+  readonly featureFlagsMap: Partial<Record<FeatureFlagKey, boolean>>;
 
   private readonly context: QueryBuilderContext;
   private readonly whereClauses: WhereClause[] = [];
@@ -103,7 +106,7 @@ export class WorkspaceSelectQueryBuilder implements WhereExpressionLike {
     this.alias = alias;
     this.tableShape = context.tableShape;
     this.objectRecordsPermissions = context.objectRecordsPermissions;
-    this.isRecordSharingEnabled = context.isRecordSharingEnabled ?? false;
+    this.featureFlagsMap = context.featureFlagsMap ?? {};
     this.context = context;
   }
 
@@ -770,26 +773,12 @@ export class WorkspaceSelectQueryBuilder implements WhereExpressionLike {
     return this.getReferencedColumnNamesByAlias()[this.alias] ?? [];
   }
 
-  update(): WorkspaceMutationQueryBuilder {
-    return this.toMutationQueryBuilder('update');
-  }
-
-  delete(): WorkspaceMutationQueryBuilder {
-    return this.toMutationQueryBuilder('delete');
-  }
-
-  softDelete(): WorkspaceMutationQueryBuilder {
-    return this.toMutationQueryBuilder('soft-delete');
-  }
-
-  restore(): WorkspaceMutationQueryBuilder {
-    return this.toMutationQueryBuilder('restore');
-  }
-
-  private toMutationQueryBuilder(
+  // Not an instance method, so builders from createQueryBuilder expose no write that skips the repository checks
+  static toMutationQueryBuilder(
+    selectQueryBuilder: WorkspaceSelectQueryBuilder,
     kind: MutationKind,
   ): WorkspaceMutationQueryBuilder {
-    if (this.joinClauses.length > 0) {
+    if (selectQueryBuilder.joinClauses.length > 0) {
       throw new TwentyOrmException(
         `A mutation cannot carry a relation join; rewrite the filter as an "id IN (subquery)" predicate first`,
         TwentyOrmExceptionCode.UNSUPPORTED_OPERATION,
@@ -797,7 +786,7 @@ export class WorkspaceSelectQueryBuilder implements WhereExpressionLike {
     }
 
     // Row-level permission predicates are injected on the select path only, so an EXISTS here would be unfiltered
-    if (this.existsFilterClauses.length > 0) {
+    if (selectQueryBuilder.existsFilterClauses.length > 0) {
       throw new TwentyOrmException(
         `A mutation cannot carry a relation filter; rewrite the filter as an "id IN (subquery)" predicate first`,
         TwentyOrmExceptionCode.UNSUPPORTED_OPERATION,
@@ -805,17 +794,17 @@ export class WorkspaceSelectQueryBuilder implements WhereExpressionLike {
     }
 
     return new WorkspaceMutationQueryBuilder({
-      alias: this.alias,
+      alias: selectQueryBuilder.alias,
       kind,
       context: {
-        tableShape: this.tableShape,
-        executor: this.context.executor,
-        formatResult: this.context.formatResult,
+        tableShape: selectQueryBuilder.tableShape,
+        executor: selectQueryBuilder.context.executor,
+        formatResult: selectQueryBuilder.context.formatResult,
       },
-      whereClauses: this.whereClauses,
-      rowAccessConditions: this.rowAccessConditions,
-      includeDeleted: this.includeDeleted,
-      parameters: this.parameters,
+      whereClauses: selectQueryBuilder.whereClauses,
+      rowAccessConditions: selectQueryBuilder.rowAccessConditions,
+      includeDeleted: selectQueryBuilder.includeDeleted,
+      parameters: selectQueryBuilder.parameters,
     });
   }
 

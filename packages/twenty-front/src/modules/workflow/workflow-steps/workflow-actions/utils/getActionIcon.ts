@@ -21,6 +21,7 @@ export const getActionIcon = (actionType: WorkflowActionType) => {
     case 'HTTP_REQUEST':
     case 'SEND_EMAIL':
     case 'DRAFT_EMAIL':
+    case 'SEND_WHATSAPP':
     case 'CREATE_CALENDAR_EVENT':
       return CORE_ACTIONS.find((item) => item.type === actionType)?.icon;
     case 'LOGIC_FUNCTION':
@@ -30,6 +31,7 @@ export const getActionIcon = (actionType: WorkflowActionType) => {
       return HUMAN_INPUT_ACTIONS.find((item) => item.type === actionType)?.icon;
     case 'ITERATOR':
     case 'DELAY':
+    case 'WAIT_FOR_EVENT':
     case 'FILTER':
     case 'IF_ELSE':
       return FLOW_ACTIONS.find((item) => item.type === actionType)?.icon;

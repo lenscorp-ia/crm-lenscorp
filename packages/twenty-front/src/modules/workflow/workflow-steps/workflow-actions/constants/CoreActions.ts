@@ -4,6 +4,7 @@ import { CREATE_CALENDAR_EVENT_ACTION } from '@/workflow/workflow-steps/workflow
 import { DRAFT_EMAIL_ACTION } from '@/workflow/workflow-steps/workflow-actions/constants/actions/DraftEmailAction';
 import { HTTP_REQUEST_ACTION } from '@/workflow/workflow-steps/workflow-actions/constants/actions/HttpRequestAction';
 import { SEND_EMAIL_ACTION } from '@/workflow/workflow-steps/workflow-actions/constants/actions/SendEmailAction';
+import { SEND_WHATSAPP_ACTION } from '@/workflow/workflow-steps/workflow-actions/constants/actions/SendWhatsappAction';
 
 export const CORE_ACTIONS: Array<{
   defaultLabel: string;
@@ -12,6 +13,7 @@ export const CORE_ACTIONS: Array<{
     | 'CODE'
     | 'SEND_EMAIL'
     | 'DRAFT_EMAIL'
+    | 'SEND_WHATSAPP'
     | 'HTTP_REQUEST'
     | 'CREATE_CALENDAR_EVENT'
   >;
@@ -19,6 +21,7 @@ export const CORE_ACTIONS: Array<{
 }> = [
   SEND_EMAIL_ACTION,
   DRAFT_EMAIL_ACTION,
+  SEND_WHATSAPP_ACTION,
   CREATE_CALENDAR_EVENT_ACTION,
   HTTP_REQUEST_ACTION,
   CODE_ACTION,

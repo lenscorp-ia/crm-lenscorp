@@ -5,6 +5,7 @@ import { type WorkflowClassifyActionSettings } from 'src/modules/workflow/workfl
 import { type WorkflowCodeActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/code/types/workflow-code-action-settings.type';
 import { type WorkflowCreateCalendarEventActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/create-calendar-event/types/workflow-create-calendar-event-action-settings.type';
 import { type WorkflowDelayActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/delay/types/workflow-delay-action-settings.type';
+import { type WorkflowWaitForEventActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/wait-for-event/types/workflow-wait-for-event-action-settings.type';
 import { type WorkflowFilterActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/filter/types/workflow-filter-action-settings.type';
 import { type WorkflowFormActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/form/types/workflow-form-action-settings.type';
 import { type WorkflowHttpRequestActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/http-request/types/workflow-http-request-action-settings.type';
@@ -13,6 +14,7 @@ import { type WorkflowIteratorActionSettings } from 'src/modules/workflow/workfl
 import { type WorkflowLogicFunctionActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/logic-function/types/workflow-logic-function-action-settings.type';
 import { type WorkflowSendEmailActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/mail-sender/types/workflow-send-email-action-settings.type';
 import { type WorkflowSendChatMessageActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/send-chat-message/types/workflow-send-chat-message-action-settings.type';
+import { type WorkflowSendWhatsappActionSettings } from 'src/modules/workflow/workflow-executor/workflow-actions/send-whatsapp/types/workflow-send-whatsapp-action-settings.type';
 import {
   type WorkflowCreateRecordActionSettings,
   type WorkflowDeleteRecordActionSettings,
@@ -59,6 +61,11 @@ export type WorkflowDraftEmailAction = BaseWorkflowAction & {
 export type WorkflowSendChatMessageAction = BaseWorkflowAction & {
   type: WorkflowActionType.SEND_CHAT_MESSAGE;
   settings: WorkflowSendChatMessageActionSettings;
+};
+
+export type WorkflowSendWhatsappAction = BaseWorkflowAction & {
+  type: WorkflowActionType.SEND_WHATSAPP;
+  settings: WorkflowSendWhatsappActionSettings;
 };
 
 export type WorkflowCreateCalendarEventAction = BaseWorkflowAction & {
@@ -140,12 +147,18 @@ export type WorkflowDelayAction = BaseWorkflowAction & {
   settings: WorkflowDelayActionSettings;
 };
 
+export type WorkflowWaitForEventAction = BaseWorkflowAction & {
+  type: WorkflowActionType.WAIT_FOR_EVENT;
+  settings: WorkflowWaitForEventActionSettings;
+};
+
 export type WorkflowAction =
   | WorkflowCodeAction
   | WorkflowLogicFunctionAction
   | WorkflowSendEmailAction
   | WorkflowDraftEmailAction
   | WorkflowSendChatMessageAction
+  | WorkflowSendWhatsappAction
   | WorkflowCreateCalendarEventAction
   | WorkflowCreateRecordAction
   | WorkflowUpdateRecordAction
@@ -161,4 +174,5 @@ export type WorkflowAction =
   | WorkflowClassifyAction
   | WorkflowIteratorAction
   | WorkflowEmptyAction
-  | WorkflowDelayAction;
+  | WorkflowDelayAction
+  | WorkflowWaitForEventAction;

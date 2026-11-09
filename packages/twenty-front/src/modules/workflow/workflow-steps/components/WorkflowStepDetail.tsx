@@ -8,6 +8,7 @@ import { WorkflowEditActionClassify } from '@/workflow/workflow-steps/workflow-a
 import { WorkflowActionCode } from '@/workflow/workflow-steps/workflow-actions/code-action/components/WorkflowActionCode';
 import { WorkflowEditActionCreateCalendarEvent } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionCreateCalendarEvent';
 import { WorkflowEditActionSendChatMessage } from '@/workflow/workflow-steps/workflow-actions/send-chat-message-action/components/WorkflowEditActionSendChatMessage';
+import { WorkflowEditActionSendWhatsapp } from '@/workflow/workflow-steps/workflow-actions/send-whatsapp-action/components/WorkflowEditActionSendWhatsapp';
 import { WorkflowEditActionCreateRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionCreateRecord';
 import { WorkflowEditActionDeleteRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionDeleteRecord';
 import { WorkflowEditActionEmpty } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmpty';
@@ -15,6 +16,7 @@ import { WorkflowEditActionEmailBase } from '@/workflow/workflow-steps/workflow-
 import { WorkflowEditActionUpdateRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionUpdateRecord';
 import { WorkflowEditActionUpsertRecord } from '@/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionUpsertRecord';
 import { WorkflowEditActionDelay } from '@/workflow/workflow-steps/workflow-actions/delay-actions/components/WorkflowEditActionDelay';
+import { WorkflowEditActionWaitForEvent } from '@/workflow/workflow-steps/workflow-actions/wait-for-event-action/components/WorkflowEditActionWaitForEvent';
 import { WorkflowEditActionFilter } from '@/workflow/workflow-steps/workflow-actions/filter-action/components/WorkflowEditActionFilter';
 import { WorkflowEditActionFindRecords } from '@/workflow/workflow-steps/workflow-actions/find-records-action/components/WorkflowEditActionFindRecords';
 import { WorkflowEditActionFormBuilder } from '@/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder';
@@ -142,6 +144,15 @@ export const WorkflowStepDetail = ({
         case 'SEND_CHAT_MESSAGE': {
           return (
             <WorkflowEditActionSendChatMessage
+              key={stepId}
+              action={stepDefinition.definition}
+              actionOptions={props}
+            />
+          );
+        }
+        case 'SEND_WHATSAPP': {
+          return (
+            <WorkflowEditActionSendWhatsapp
               key={stepId}
               action={stepDefinition.definition}
               actionOptions={props}
@@ -288,6 +299,15 @@ export const WorkflowStepDetail = ({
         case 'DELAY': {
           return (
             <WorkflowEditActionDelay
+              key={stepId}
+              action={stepDefinition.definition}
+              actionOptions={props}
+            />
+          );
+        }
+        case 'WAIT_FOR_EVENT': {
+          return (
+            <WorkflowEditActionWaitForEvent
               key={stepId}
               action={stepDefinition.definition}
               actionOptions={props}
